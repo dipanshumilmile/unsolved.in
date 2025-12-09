@@ -22,7 +22,7 @@ export default function Navbar() {
           <a href="report-problem" className="hover:text-slate-900">
             Report Problem
           </a>
-          <a href="#dashboard" className="hover:text-slate-900">
+          <a href="dashboard" className="hover:text-slate-900">
             Dashboard
           </a>
         </nav>
