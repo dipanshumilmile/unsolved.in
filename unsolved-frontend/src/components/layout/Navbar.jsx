@@ -17,7 +17,7 @@ export default function Navbar() {
           <a href="#hero" className="hover:text-slate-900">
             Discover
           </a>
-          <a href="#report" className="hover:text-slate-900">
+          <a href="report-problem" className="hover:text-slate-900">
             Report Problem
           </a>
           <a href="#dashboard" className="hover:text-slate-900">
