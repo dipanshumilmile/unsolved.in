@@ -21,11 +21,19 @@ function Pill({ label, color = "gray" }) {
   );
 }
 
-export default function ProblemCard({ problem }) {
+export default function ProblemCard({ problem, onClick }) {
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
   const [voteCount, setVoteCount] = useState(problem.votes);
   const [copied, setCopied] = useState(false);
+
+  // map severity text -> pill color
+  const severityColor =
+    problem.severity === "High" || problem.severity === "Critical"
+      ? "red"
+      : problem.severity === "Medium"
+      ? "yellow"
+      : "gray";
 
   const handleToggleLike = () => {
     setLiked((prev) => !prev);
@@ -56,7 +64,12 @@ export default function ProblemCard({ problem }) {
   };
 
   return (
-    <article className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
+    <article
+      className={`flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition ${
+        onClick ? "cursor-pointer" : ""
+      }`}
+      onClick={onClick}
+    >
       <header className="mb-3 flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <Pill label={problem.status} color="green" />
@@ -95,7 +108,10 @@ export default function ProblemCard({ problem }) {
           {/* Upvote */}
           <button
             type="button"
-            onClick={handleToggleLike}
+            onClick={(e) => {
+              e.stopPropagation(); // so click doesn't trigger card navigation
+              handleToggleLike();
+            }}
             className={`flex items-center gap-1 rounded-full px-2 py-0.5 transition-colors ${
               liked ? "bg-sky-50 text-sky-600" : "hover:bg-slate-50"
             }`}
@@ -109,7 +125,10 @@ export default function ProblemCard({ problem }) {
           {/* Save */}
           <button
             type="button"
-            onClick={() => setSaved((prev) => !prev)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSaved((prev) => !prev);
+            }}
             className={`ml-2 flex items-center gap-1 text-xs transition-colors ${
               saved ? "text-amber-500" : "text-gray-400 hover:text-amber-500"
             }`}
@@ -126,7 +145,10 @@ export default function ProblemCard({ problem }) {
           {/* Share */}
           <button
             type="button"
-            onClick={handleShare}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleShare();
+            }}
             className="flex items-center gap-1 text-xs text-gray-400 hover:text-sky-600 transition-colors"
           >
             <Share2 size={14} />
