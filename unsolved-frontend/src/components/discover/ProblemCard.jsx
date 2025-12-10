@@ -60,16 +60,7 @@ export default function ProblemCard({ problem }) {
       <header className="mb-3 flex items-start justify-between gap-2">
         <div className="flex items-center gap-2">
           <Pill label={problem.status} color="green" />
-          <Pill
-            label={problem.severity}
-            color={
-              problem.severity === "High"
-                ? "red"
-                : problem.severity === "Medium"
-                ? "yellow"
-                : "gray"
-            }
-          />
+          <Pill label={problem.severity} color={severityColor} />
         </div>
         <span className="text-xs text-gray-400">{problem.timeAgo}</span>
       </header>

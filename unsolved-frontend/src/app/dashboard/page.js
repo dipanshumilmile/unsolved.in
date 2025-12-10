@@ -1,39 +1,59 @@
-// src/app/dashboard/page.ts
-'use client'
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
+
+import problemsData from "@/data/problems";
+import teamsData from "@/data/team";
+import { savedProblemIds } from "@/data/savedProblems";
+
 import UserProfileHeader from "@/components/dashboard/UserProfileHeader";
 import StatsSection from "@/components/dashboard/StatsSection";
 import ProblemFilters from "@/components/dashboard/ProblemFilters";
+import ProblemsList from "@/components/dashboard/ProblemsList";
+import TeamsList from "@/components/dashboard/TeamsList";
 import SidePanel from "@/components/dashboard/SidePanel";
 
-const Page = () => {
+export default function DashboardPage() {
+  const [activeFilter, setActiveFilter] = useState("my-submissions");
+
+  // later this will come from auth
+  const currentUserName = "Priya Sharma";
+
+  const mySubmissions = problemsData.filter(
+    (p) => p.author === currentUserName
+  );
+
+  const savedProblems = problemsData.filter((p) =>
+    savedProblemIds.includes(p.id)
+  );
+
+  const isMyTeams = activeFilter === "my-teams";
+  const isMySubmissions = activeFilter === "my-submissions";
+
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto py-6 px-4 space-y-6">
-
-        {/* Profile header with name, description, report button, settings */}
         <UserProfileHeader />
-
-        {/* Stats cards (Problems Reported, Teams Joined, etc.) */}
         <StatsSection />
 
-        {/* Main content grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-          {/* Left: filters + problems list */}
+          {/* LEFT: filters + main content */}
           <section className="lg:col-span-2 space-y-4">
-            <ProblemFilters />
+            <ProblemFilters
+              active={activeFilter}
+              onChange={setActiveFilter}
+            />
 
-            {/* Problems list goes here */}
-            {/* TODO: replace with your ProblemList component */}
-            <div className="bg-white rounded-xl shadow-sm p-4 text-sm text-gray-500">
-              {/* Placeholder: Problem cards list */}
-              {/* Map your problem data into cards here */}
-              Problems list will be rendered here.
-            </div>
+            {isMyTeams ? (
+              <TeamsList teams={teamsData} />
+            ) : (
+              <ProblemsList
+                problems={isMySubmissions ? mySubmissions : savedProblems}
+              />
+            )}
           </section>
 
-          {/* Right: notifications + impact */}
+          {/* RIGHT: notifications + impact */}
           <aside className="lg:col-span-1">
             <SidePanel />
           </aside>
@@ -41,6 +61,4 @@ const Page = () => {
       </div>
     </main>
   );
-};
-
-export default Page;
+}

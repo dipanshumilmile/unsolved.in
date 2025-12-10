@@ -1,6 +1,7 @@
 // SidePanel.jsx
 import React from "react";
-
+import Notification from "../icons/Notification";
+import UpwardArrow from "../icons/UpwardArrow";
 const SidePanel = () => {
   return (
     <div className="flex flex-col gap-5">
@@ -8,7 +9,10 @@ const SidePanel = () => {
       {/* Notifications Box */}
       <div className="bg-white rounded-xl p-4 shadow-sm">
         <div className="flex justify-between items-center">
-          <h3 className="font-semibold">Notifications</h3>
+          <div className="flex gap-2 items-center">
+            <Notification className="h-4 w-4" />
+            <h3 className="font-semibold">Notifications</h3>
+          </div>
           <span className="text-xs text-white bg-purple-500 rounded-full px-2 py-0.5">
             2 new
           </span>
@@ -38,7 +42,10 @@ const SidePanel = () => {
 
       {/* Impact Box */}
       <div className="bg-white rounded-xl p-4 shadow-sm">
-        <h3 className="font-semibold mb-2">Your Impact</h3>
+        <div className="flex items-center gap-2">
+          <UpwardArrow className="h-5 w-5"/>
+          <h3 className="font-semibold mb-2">Your Impact</h3>
+        </div>
         <div className="text-sm text-gray-700 flex flex-col gap-1">
           <p>Total upvotes received <b>234</b></p>
           <p>Problems solved <b>1</b></p>

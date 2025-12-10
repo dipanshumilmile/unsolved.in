@@ -1,28 +1,25 @@
-// ProblemFilters.jsx
-import React, { useState } from "react";
+const tabs = [
+  { label: "My Submissions", value: "my-submissions" },
+  { label: "My Teams", value: "my-teams" },
+  { label: "Saved", value: "saved" },
+];
 
-const tabs = ["My Submissions", "My Teams", "Saved"];
-
-const ProblemFilters = () => {
-  const [active, setActive] = useState("My Submissions");
-
+export default function ProblemFilters({ active, onChange }) {
   return (
     <div className="mt-6 flex gap-5 border-b border-gray-200">
-      {tabs.map((tab) => (
+      {tabs.map(({ label, value }) => (
         <button
-          key={tab}
-          onClick={() => setActive(tab)}
+          key={value}
+          onClick={() => onChange(value)}
           className={`pb-2 text-sm font-medium ${
-            active === tab
+            active === value
               ? "text-teal-600 border-b-2 border-teal-600"
               : "text-gray-500"
           }`}
         >
-          {tab}
+          {label}
         </button>
       ))}
     </div>
   );
-};
-
-export default ProblemFilters;
+}
