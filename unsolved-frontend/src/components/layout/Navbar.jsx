@@ -1,5 +1,8 @@
 import { Bell } from "lucide-react";
 import { Search } from "lucide-react";
+import { UserRound } from "lucide-react";
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-100/80 bg-white/80 backdrop-blur">
@@ -29,12 +32,13 @@ export default function Navbar() {
 
         {/* Right actions */}
         <div className="flex items-center gap-6">
-          <button
+          <Link href="/discover">
+          <button href="/discover"
             className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
             aria-label="Search"
           >
             <Search color="#14191a" />
-          </button>
+          </button></Link>
 
           <button
             className="relative hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
@@ -52,7 +56,7 @@ export default function Navbar() {
             className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs text-slate-600 shadow-sm hover:bg-slate-100"
             aria-label="Profile"
           >
-            🙂
+            <UserRound />
           </button>
         </div>
       </div>
