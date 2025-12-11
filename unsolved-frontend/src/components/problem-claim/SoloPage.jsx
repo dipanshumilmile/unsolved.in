@@ -1,10 +1,33 @@
+// src/components/problem-claim/SoloPage.jsx
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SoloPage({ problem }) {
   const router = useRouter();
+  const [projectName, setProjectName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [targetDate, setTargetDate] = useState("");
+  const [approach, setApproach] = useState("");
+  const [confirm, setConfirm] = useState(false);
+
+  const isValid = projectName.trim() !== "" && startDate && targetDate;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    const projectId = 1; // placeholder
+    const params = new URLSearchParams({
+      startDate,
+      targetDate,
+      type: "solo",
+    });
+
+    router.push(`/dashboard/projects/${projectId}?${params.toString()}`);
+  };
 
   return (
     <main className="bg-slate-50/60 py-10">
@@ -63,14 +86,13 @@ export default function SoloPage({ problem }) {
             </div>
           </div>
 
-          {/* Info banner */}
           <div className="mb-6 rounded-2xl bg-amber-50 px-4 py-3 text-xs text-amber-800">
             <span className="font-semibold">Going solo?</span> That&apos;s
-            brave! You&apos;ll have full control over your solution, but
-            remember you can always convert to a team later if you need help.
+            brave! You&apos;ll have full control over your solution, but you
+            can always convert to a team later if you need help.
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Project Name */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
@@ -78,6 +100,8 @@ export default function SoloPage({ problem }) {
               </label>
               <input
                 type="text"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
                 placeholder="e.g., Drain Flow Monitor, Smart Alert System"
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
@@ -86,13 +110,41 @@ export default function SoloPage({ problem }) {
               </p>
             </div>
 
-            {/* Your Approach */}
+            {/* Start / Target dates */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-800">
+                  Start Date <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-800">
+                  Target Date <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={targetDate}
+                  onChange={(e) => setTargetDate(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+              </div>
+            </div>
+
+            {/* Your Approach (old field) */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
                 Your Approach (Optional)
               </label>
               <textarea
                 rows={4}
+                value={approach}
+                onChange={(e) => setApproach(e.target.value)}
                 placeholder="Briefly describe how you plan to tackle this problem..."
                 className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
@@ -101,11 +153,13 @@ export default function SoloPage({ problem }) {
               </p>
             </div>
 
-            {/* Confirmation */}
+            {/* Confirmation (old field) */}
             <div className="rounded-2xl border border-slate-200 bg-slate-50/60 px-4 py-3 text-xs text-slate-700">
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
+                  checked={confirm}
+                  onChange={(e) => setConfirm(e.target.checked)}
                   className="mt-0.5 h-3.5 w-3.5 text-sky-500 focus:ring-sky-500"
                 />
                 <span>
@@ -132,7 +186,12 @@ export default function SoloPage({ problem }) {
               </button>
               <button
                 type="submit"
-                className="w-full rounded-full bg-sky-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-sky-600 sm:w-40"
+                disabled={!isValid}
+                className={`w-full rounded-full px-4 py-2.5 text-sm font-medium text-white sm:w-40 ${
+                  isValid
+                    ? "bg-sky-500 hover:bg-sky-600"
+                    : "bg-slate-300 cursor-not-allowed"
+                }`}
               >
                 Start Project
               </button>
