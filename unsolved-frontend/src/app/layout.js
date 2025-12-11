@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "Unsolved.in",
@@ -21,6 +22,14 @@ export default function RootLayout({ children }) {
           {/* Footer on every page */}
           <Footer />
         </div>
+
+        {/* Global toast container */}
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            duration: 5000,
+          }}
+        />
       </body>
     </html>
   );
