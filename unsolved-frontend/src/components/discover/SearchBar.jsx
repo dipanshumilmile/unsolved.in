@@ -1,5 +1,7 @@
 // src/components/discover/SearchBar.jsx
+
 "use client";
+import { Search } from "lucide-react";
 
 export default function SearchBar({ value, onChange, onSubmit }) {
   return (
@@ -9,7 +11,7 @@ export default function SearchBar({ value, onChange, onSubmit }) {
     >
       <div className="relative w-full">
         <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-gray-400">
-          🔍
+          <Search color="#14191a" width={20}/>
         </span>
         <input
           type="text"

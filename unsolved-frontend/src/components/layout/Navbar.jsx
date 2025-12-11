@@ -37,7 +37,7 @@ export default function Navbar() {
             className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
             aria-label="Search"
           >
-            <Search color="#14191a" />
+            <Search color="#14191a" width={20}/>
           </button></Link>
 
           <button

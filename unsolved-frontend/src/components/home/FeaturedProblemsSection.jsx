@@ -24,7 +24,7 @@ export default function FeaturedProblemsSection() {
         <div className="mt-6 grid gap-4 md:grid-cols-3  flex flex-col justify-between
         rounded-2xl border border-gray-100 bg-white
         shadow-sm hover:shadow-md hover:-translate-y-0.5
-        transition-shadow transition-transform duration-150">
+        transition-shadow transition-transform duration-150 ">
           {featured.map((p) => (
             <ProblemCard key={p.id} problem={p} />
           ))}
