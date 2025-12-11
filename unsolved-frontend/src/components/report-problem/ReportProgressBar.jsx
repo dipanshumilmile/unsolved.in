@@ -1,12 +1,16 @@
 // ReportProgressBar.jsx
 import React from 'react';
+import {Tags} from 'lucide-react'
+import NotepadTextIcon from '../icons/NotepadTextIcon';
+import {TriangleAlert} from 'lucide-react'
+import Tickmark from '../icons/Tickmark';
 
 const steps = [
-  { id: 1, label: 'Title', icon: '📝' },
-  { id: 2, label: 'Description', icon: '📄' },
-  { id: 3, label: 'Tags', icon: '🏷️' },
-  { id: 4, label: 'Severity', icon: '⚠️' },
-  { id: 5, label: 'Review', icon: '✅' },
+  { id: 1, label: 'Title', icon: <NotepadTextIcon className='w-4 h-4'/> },
+  { id: 2, label: 'Description', icon: <NotepadTextIcon className='w-4 h-4'/> },
+  { id: 3, label: 'Tags', icon: <Tags className='w-4 h-4' /> },
+  { id: 4, label: 'Severity', icon: <TriangleAlert className='h-4 w-4'/> },
+  { id: 5, label: 'Review', icon: <Tickmark className='h-4 w-4 text-green-500'/>  },
 ];
 
 export default function ReportProgressBar({ currentStep = 1 }) {
