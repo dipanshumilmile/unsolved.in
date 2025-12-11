@@ -1,10 +1,34 @@
+// src/components/problem-claim/StartTeamPage.jsx
 "use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function StartTeamPage({ problem }) {
   const router = useRouter();
+  const [teamName, setTeamName] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [targetDate, setTargetDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [skills, setSkills] = useState("");
+  const [maxSize, setMaxSize] = useState("5");
+
+  const isValid = teamName.trim() !== "" && startDate && targetDate;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!isValid) return;
+
+    const projectId = 1; // replace with real id later
+    const params = new URLSearchParams({
+      startDate,
+      targetDate,
+      type: "team",
+    });
+
+    router.push(`/dashboard/projects/${projectId}?${params.toString()}`);
+  };
 
   return (
     <main className="bg-slate-50/60 py-10">
@@ -63,7 +87,7 @@ export default function StartTeamPage({ problem }) {
             </div>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Team Name */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
@@ -71,6 +95,8 @@ export default function StartTeamPage({ problem }) {
               </label>
               <input
                 type="text"
+                value={teamName}
+                onChange={(e) => setTeamName(e.target.value)}
                 placeholder="e.g., Green Warriors, Tech Innovators"
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
@@ -79,13 +105,41 @@ export default function StartTeamPage({ problem }) {
               </p>
             </div>
 
-            {/* Team Description */}
+            {/* Start / Target dates */}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-800">
+                  Start Date <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-slate-800">
+                  Target Date <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={targetDate}
+                  onChange={(e) => setTargetDate(e.target.value)}
+                  className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                />
+              </div>
+            </div>
+
+            {/* Team Description (old field) */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
                 Team Description
               </label>
               <textarea
                 rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 placeholder="Describe your approach and what kind of teammates you're looking for..."
                 className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               />
@@ -94,7 +148,7 @@ export default function StartTeamPage({ problem }) {
               </p>
             </div>
 
-            {/* Required Skills */}
+            {/* Required Skills (old field) */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
                 Required Skills
@@ -102,6 +156,8 @@ export default function StartTeamPage({ problem }) {
               <div className="flex gap-2">
                 <input
                   type="text"
+                  value={skills}
+                  onChange={(e) => setSkills(e.target.value)}
                   placeholder="e.g., React, Python, Design"
                   className="flex-1 rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
                 />
@@ -114,13 +170,14 @@ export default function StartTeamPage({ problem }) {
               </div>
             </div>
 
-            {/* Maximum Team Size */}
+            {/* Maximum Team Size (old field) */}
             <div>
               <label className="mb-1 block text-sm font-medium text-slate-800">
                 Maximum Team Size
               </label>
               <select
-                defaultValue="5"
+                value={maxSize}
+                onChange={(e) => setMaxSize(e.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
               >
                 {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
@@ -145,7 +202,12 @@ export default function StartTeamPage({ problem }) {
               </button>
               <button
                 type="submit"
-                className="w-full rounded-full bg-sky-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-sky-600 sm:w-40"
+                disabled={!isValid}
+                className={`w-full rounded-full px-4 py-2.5 text-sm font-medium text-white sm:w-40 ${
+                  isValid
+                    ? "bg-sky-500 hover:bg-sky-600"
+                    : "bg-slate-300 cursor-not-allowed"
+                }`}
               >
                 Create Team
               </button>
