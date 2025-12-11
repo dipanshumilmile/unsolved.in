@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
 import HeadingOfPage from "@/components/report-problem/HeadingOfPage";
 import ReportProgressBar from "@/components/report-problem/ReportProgressBar";
 import TitleBoxDetail from "@/components/report-problem/TitleBoxDetail";
@@ -21,32 +22,30 @@ export default function Page() {
   const [severity, setSeverity] = useState("");
   const [location, setLocation] = useState("");
 
-const handleSubmitProblem = async () => {
-  // 1) Submit to your API here if needed
-  // await fetch("/api/problems", { ... });
+  const handleSubmitProblem = async () => {
+    // 1) Submit to your API here if needed
+    // await fetch("/api/problems", { ... });
 
-  // 2) Success toast with green tick + two lines
-  toast.success(
-    <div>
-      <p className="text-sm font-semibold">Problem Submitted</p>
-      <p className="text-xs">Will be reviewed and notified to you.</p>
-    </div>,
-    {
-      duration: 5000,
+    // 2) Success toast with green tick + two lines
+    toast.success(
+      <div>
+        <p className="text-sm font-semibold">Problem Submitted</p>
+        <p className="text-xs">Will be reviewed and notified to you.</p>
+      </div>,
+      {
+        duration: 5000,
+        style: {
+          maxWidth: "360px",
+          padding: "10px 10px",
+        },
+      }
+    );
 
-      style: {
-        maxWidth: "360px",   // controls width
-        padding: "10px 10px" // controls internal spacing
-      },
-    }
-  );
-
-  // 3) Redirect to dashboard after a short delay
-  setTimeout(() => {
-    router.push("/dashboard");
-  }, 800);
-};
-
+    // 3) Redirect to dashboard after a short delay
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 800);
+  };
 
   const isLastStep = currentStep === 5;
 
@@ -112,3 +111,4 @@ const handleSubmitProblem = async () => {
     </div>
   );
 }
+

@@ -30,7 +30,7 @@ export default function HowItWorksSection() {
     <section className="border-b border-slate-100 bg-white">
       <div className="mx-auto max-w-5xl px-4 py-10 md:px-6 md:py-12">
         <div className="text-center">
-          <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-medium text-slate-600">
+          <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[20px] font-medium text-slate-600">
             How It Works
           </span>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 md:text-[1.7rem]">

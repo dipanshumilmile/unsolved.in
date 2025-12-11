@@ -16,21 +16,21 @@ export default function HeroSection() {
 
         {/* Heading */}
         <div className="mt-6 text-center">
-          <h1 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl lg:text-[2.9rem]">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl lg:text-[2.9rem]">
             Real problems.{" "}
             <span className="bg-gradient-to-r from-cyan-500 to-sky-500 bg-clip-text text-transparent">
               Real solutions.
             </span>
             <br />
-            Built by your community.
+            <div className="mt-3">Built by your community.</div>
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-[0.93rem]">
+          <p className="mx-auto mt-10 mb-20 max-w-2xl text-sm text-slate-600 md:text-[0.93rem]">
             Report issues in your neighborhood. Students and volunteers team up
             to build solutions. Together, we solve what&apos;s unsolved.
           </p>
         </div>
 
-        {/* Search */}
+        {/* Search
         <div className="mx-auto mt-7 flex max-w-2xl flex-col gap-3">
           <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-white px-4 py-2 shadow-lg shadow-sky-100">
             <span className="text-slate-400">🔍</span>
@@ -42,10 +42,10 @@ export default function HeroSection() {
             <button className="rounded-full bg-cyan-500 px-4 py-1.5 text-xs font-semibold text-white shadow shadow-cyan-400/50 hover:bg-cyan-600">
               Search
             </button>
-          </div>
+          </div> */}
 
           {/* Primary CTAs */}
-          <div className="flex flex-wrap justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-x-20 mt-10 mb-20 scale-150">
             <button className="rounded-full bg-cyan-500 px-5 py-2 text-xs font-semibold text-white shadow-md shadow-cyan-400/40 hover:bg-cyan-600">
               Report a Problem →
             </button>
@@ -53,10 +53,10 @@ export default function HeroSection() {
               Browse Problems
             </button>
           </div>
-        </div>
+        
 
         {/* Stats */}
-        <StatsStrip />
+        <div className="scale-125"><StatsStrip /></div>
       </div>
     </section>
   );

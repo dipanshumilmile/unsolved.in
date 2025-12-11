@@ -1,3 +1,8 @@
+import { Bell } from "lucide-react";
+import { Search } from "lucide-react";
+import { UserRound } from "lucide-react";
+import Link from "next/link";
+
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-100/80 bg-white/80 backdrop-blur">
@@ -13,46 +18,45 @@ export default function Navbar() {
         </div>
 
         {/* Center nav */}
-        <nav className="hidden items-center gap-6 text-sm text-slate-600 md:flex">
-          <a href="#hero" className="hover:text-slate-900">
+        <nav className="hidden items-center gap-6 text-sm text-slate-800 md:flex">
+          <a href="/discover" className="hover:text-slate-900">
             Discover
           </a>
           <a href="report-problem" className="hover:text-slate-900">
             Report Problem
           </a>
-          <a href="#dashboard" className="hover:text-slate-900">
+          <a href="dashboard" className="hover:text-slate-900">
             Dashboard
           </a>
         </nav>
 
         {/* Right actions */}
-        <div className="flex items-center gap-2">
-          <button
+        <div className="flex items-center gap-6">
+          <Link href="/discover">
+          <button href="/discover"
             className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
             aria-label="Search"
           >
-            🔍
-          </button>
+            <Search color="#14191a" width={20}/>
+          </button></Link>
 
           <button
             className="relative hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
             aria-label="Notifications"
           >
-            🔔
+            <Bell color="#ffea00" />
             <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
               2
             </span>
           </button>
 
-          <button className="hidden rounded-full bg-cyan-500 px-4 py-1.5 text-xs font-semibold text-white shadow-md shadow-cyan-400/40 hover:bg-cyan-600 md:inline-flex">
-            + Report
-          </button>
+         
 
           <button
             className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs text-slate-600 shadow-sm hover:bg-slate-100"
             aria-label="Profile"
           >
-            🙂
+            <UserRound />
           </button>
         </div>
       </div>

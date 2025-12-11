@@ -6,6 +6,7 @@ import CallToActionSection from "../components/home/CallToActionSection";
 export default function HomePage() {
   return (
     <div className="pb-12">
+
       <HeroSection />
       <HowItWorksSection />
       <FeaturedProblemsSection />
