@@ -1,3 +1,6 @@
+// src/data/problems.js
+import { ALL_TAGS } from './tag.js';
+
 const problemsData = [
   {
     id: 1,
@@ -8,7 +11,7 @@ const problemsData = [
     description:
       "Recurring flooding affects 200+ households during monsoon.",
     location: "Market Street, Andheri West",
-    tags: ["drainage", "waste-management", "infrastructure", "monsoon"],
+    tags: [ALL_TAGS[3], ALL_TAGS[12], ALL_TAGS[1], ALL_TAGS[10]], // infrastructure, waste-management, education, government-services
     votes: 142,
     comments: 1,
     author: "Priya Sharma",
@@ -23,7 +26,7 @@ const problemsData = [
     description:
       "Rising street dog population causing safety concerns for children and elderly.",
     location: "Green Valley Colony, Hyderabad",
-    tags: ["animal-welfare", "public-safety", "community"],
+    tags: [ALL_TAGS[5], ALL_TAGS[4], ALL_TAGS[14]], // environment, public-safety, community-development
     votes: 56,
     comments: 0,
     author: "Priya Sharma",
@@ -38,7 +41,7 @@ const problemsData = [
     description:
       "Large potholes slowing traffic and causing frequent two-wheeler accidents.",
     location: "Civil Hospital Road, Pune",
-    tags: ["roads", "public-safety", "infrastructure"],
+    tags: [ALL_TAGS[3], ALL_TAGS[4], ALL_TAGS[10]], // infrastructure, public-safety, government-services
     votes: 89,
     comments: 5,
     author: "Rohan Mehta",
@@ -53,7 +56,7 @@ const problemsData = [
     description:
       "Several lights not working, making the park unsafe after sunset.",
     location: "City Central Park, Bengaluru",
-    tags: ["lighting", "public-safety", "recreation"],
+    tags: [ALL_TAGS[3], ALL_TAGS[4], ALL_TAGS[10]], // infrastructure, public-safety, government-services
     votes: 24,
     comments: 2,
     author: "Ananya Rao",
@@ -68,7 +71,7 @@ const problemsData = [
     description:
       "Residents reporting foul smell and discoloration in tap water supply.",
     location: "Sunrise Residency, Chennai",
-    tags: ["water-supply", "health", "utilities"],
+    tags: [ALL_TAGS[0], ALL_TAGS[6], ALL_TAGS[10]], // healthcare, water-sanitation, government-services
     votes: 167,
     comments: 14,
     author: "Vikram Singh",
@@ -83,7 +86,7 @@ const problemsData = [
     description:
       "Local vendors and residents using empty plot as unofficial dumping ground.",
     location: "Sector 21, Noida",
-    tags: ["waste-management", "sanitation", "environment"],
+    tags: [ALL_TAGS[12], ALL_TAGS[5], ALL_TAGS[10]], // waste-management, environment, government-services
     votes: 73,
     comments: 3,
     author: "Neha Gupta",
@@ -98,7 +101,7 @@ const problemsData = [
     description:
       "Area used to experience power outages daily between 7–9 PM, now resolved.",
     location: "Lake View Apartments, Kolkata",
-    tags: ["electricity", "utilities", "infrastructure"],
+    tags: [ALL_TAGS[7], ALL_TAGS[10], ALL_TAGS[3]], // energy-electricity, government-services, infrastructure
     votes: 95,
     comments: 7,
     author: "Arjun Das",
