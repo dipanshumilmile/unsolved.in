@@ -1,11 +1,6 @@
 "use client";
 
-export default function LocationBoxDetail({
-  city,
-  state,
-  onCityChange,
-  onStateChange,
-}) {
+export default function LocationBoxDetail({ city, state, onCityChange, onStateChange }) {
   return (
     <div className="max-w-4xl mx-auto mt-6">
       <label className="text-sm font-medium text-slate-700 mb-2 block">
@@ -29,7 +24,7 @@ export default function LocationBoxDetail({
       </div>
 
       <p className="mt-2 text-xs text-slate-500">
-        Please provide the city and state where the issue exists.
+        Please enter the city and state where the issue exists.
       </p>
     </div>
   );

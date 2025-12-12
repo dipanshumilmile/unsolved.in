@@ -141,12 +141,7 @@ export default function Page() {
           onChange={setDescription}
         />
       )}
-
       {currentStep === 3 && (
-        <TagBoxDetail selectedTags={tags} onChange={setTags} />
-      )}
-
-      {currentStep === 4 && (
         <LocationBoxDetail
           city={city}
           state={stateValue}
@@ -154,6 +149,12 @@ export default function Page() {
           onStateChange={setStateValue}
         />
       )}
+
+      {currentStep === 4 && (
+        <TagBoxDetail selectedTags={tags} onChange={setTags} />
+      )}
+
+      
 
       {currentStep === 5 && (
         <SeverityBoxDetail severity={severity} onChange={setSeverity} />
