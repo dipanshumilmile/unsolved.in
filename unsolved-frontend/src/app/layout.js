@@ -4,7 +4,6 @@ import Footer from "../components/layout/Footer";
 import { Toaster } from "react-hot-toast";
 import AuthWrapper from "./AuthWrapper";
 
-
 export const metadata = {
   title: "Unsolved.in",
   description: "Real problems. Real solutions. Built by your community.",
