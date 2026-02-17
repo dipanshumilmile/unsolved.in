@@ -5,11 +5,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signup } from "@/lib/fakeAuth";
+import { signup } from "@/lib/auth";
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [category, setCategory] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,9 +21,13 @@ export default function SignupForm() {
     setError("");
 
     try {
-      signup({ name: fullName, email, password });
+      signup({
+        name: fullName,
+        email,
+        password,
+        category,
+      });
       router.push("/profile/complete");
-
     } catch (err) {
       setError(err.message || "Signup failed");
     }
@@ -60,9 +65,34 @@ export default function SignupForm() {
           </div>
         </div>
 
+        {/* Category */}
+        <div className="space-y-1">
+          <label className="text-xs font-medium text-slate-700">
+            Category
+          </label>
+          <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
+            <User size={16} className="text-slate-400" />
+            <select
+              required
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full bg-transparent text-sm outline-none text-slate-700"
+            >
+              <option value="" disabled>
+                Select category
+              </option>
+              <option value="student">Student</option>
+              <option value="professional">Professional</option>
+
+            </select>
+          </div>
+        </div>
+
         {/* Email */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-700">Email</label>
+          <label className="text-xs font-medium text-slate-700">
+            Email
+          </label>
           <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
             <Mail size={16} className="text-slate-400" />
             <input

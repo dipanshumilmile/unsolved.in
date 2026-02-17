@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getCurrentUser } from "@/lib/fakeAuth";
+import { getCurrentUser } from "@/lib/auth";
 
 const UserProfileHeader = () => {
   const router = useRouter();

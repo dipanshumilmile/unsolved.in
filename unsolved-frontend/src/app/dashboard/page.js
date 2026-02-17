@@ -13,8 +13,8 @@ import ProblemsList from "@/components/dashboard/ProblemsList";
 import TeamsList from "@/components/dashboard/TeamsList";
 import SidePanel from "@/components/dashboard/SidePanel";
 
-import { getCurrentUser } from "@/lib/fakeAuth";
-import { getUserData } from "@/lib/fakeUserData";
+import { getCurrentUser } from "@/lib/auth";
+import { getUserData } from "@/lib/userData";
 
 // Load problems from localStorage OR fallback to static
 function loadProblems() {

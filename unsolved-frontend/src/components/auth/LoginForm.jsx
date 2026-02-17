@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/fakeAuth";
+import { login } from "@/lib/auth";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -14,17 +14,21 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
 
-    try {
-      login({ email, password });
-      router.push("/dashboard"); // change later if needed
-    } catch (err) {
-      setError(err.message || "Login failed");
-    }
-  };
+  try {
+    await login({ email, password });
+    
+    // 👇 Simple check: if user has profile data → dashboard, else → profile
+    const user = getCurrentUser();
+    router.push(user?.hasProfile ? "/dashboard" : "/profile");
+  } catch (err) {
+    setError(err.message || "Login failed");
+  }
+};
+
 
   return (
     <>

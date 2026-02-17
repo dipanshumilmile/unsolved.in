@@ -8,8 +8,8 @@ import UsersIcon from "../icons/UsersIcon";
 import BookmarkIcon from "../icons/BookmarkIcon";
 import Tickmark from "../icons/Tickmark";
 import problemsDataStatic from "@/data/problems";
-import { getCurrentUser } from "@/lib/fakeAuth";
-import { getUserData } from "@/lib/fakeUserData";
+import { getCurrentUser } from "@/lib/auth";
+import { getUserData } from "@/lib/userData";
 
 /**
  * StatsSection - dynamic:

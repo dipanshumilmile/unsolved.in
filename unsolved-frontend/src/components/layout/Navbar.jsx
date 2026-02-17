@@ -6,7 +6,7 @@ import { Bell, Search, UserRound } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getCurrentUser, logout } from "@/lib/fakeAuth";
+import { getCurrentUser, logout } from "@/lib/auth";
 import { LogOut } from "lucide-react";
 
 export default function Navbar() {

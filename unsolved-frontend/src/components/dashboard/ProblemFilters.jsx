@@ -1,6 +1,6 @@
 "use client";
 
-import { getCurrentUser } from "@/lib/fakeAuth";
+import { getCurrentUser } from "@/lib/auth";
 
 export default function ProblemFilters({ active, onChange }) {
   const user = getCurrentUser();

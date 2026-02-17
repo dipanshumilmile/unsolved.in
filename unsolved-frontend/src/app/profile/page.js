@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
-import { getCurrentUser } from "@/lib/fakeAuth";
+import { getCurrentUser } from "@/lib/auth";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileSkills from "@/components/profile/ProfileSkills";
@@ -14,12 +14,20 @@ export default function ProfilePage() {
   const router = useRouter();
 
   useEffect(() => {
-    const u = getCurrentUser();
-    if (!u) {
-      router.push("/auth/login");
-      return;
+    async function loadUser() {
+      const u = await getCurrentUser();
+
+      console.log("👤 PROFILE PAGE USER:", u);
+
+      if (!u) {
+        router.push("/auth/login");
+        return;
+      }
+
+      setUser(u);
     }
-    setUser(u);
+
+    loadUser();
   }, [router]);
 
   if (!user) return <div className="p-8 text-sm">Loading...</div>;

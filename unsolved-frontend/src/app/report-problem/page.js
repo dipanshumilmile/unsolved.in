@@ -13,7 +13,7 @@ import SeverityBoxDetail from "@/components/report-problem/SeverityBoxDetail";
 import ReviewDetails from "@/components/report-problem/ReviewDetails";
 import LocationBoxDetail from "@/components/report-problem/LocationBoxDetail";
 
-import { getCurrentUser } from "@/lib/fakeAuth";
+import { getCurrentUser } from "@/lib/auth";
 
 export default function Page() {
   const router = useRouter();

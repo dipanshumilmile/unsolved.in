@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { Camera, MapPin, Briefcase } from "lucide-react";
-import { updateUser } from "@/lib/fakeAuth";
+import { updateUser } from "@/lib/auth";
 
 export default function ProfileHeader({ user }) {
   const [localPhoto, setLocalPhoto] = useState(user?.photo || "");
