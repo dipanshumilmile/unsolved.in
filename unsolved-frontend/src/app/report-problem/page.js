@@ -9,183 +9,187 @@ import ReportProgressBar from "@/components/report-problem/ReportProgressBar";
 import TitleBoxDetail from "@/components/report-problem/TitleBoxDetail";
 import DescriptionBoxDetail from "@/components/report-problem/DescriptionBoxDetail";
 import TagBoxDetail from "@/components/report-problem/TagBoxDetail";
-import SeverityBoxDetail from "@/components/report-problem/SeverityBoxDetail";
 import ReviewDetails from "@/components/report-problem/ReviewDetails";
 import LocationBoxDetail from "@/components/report-problem/LocationBoxDetail";
 
 import { getCurrentUser } from "@/lib/auth";
 
 export default function Page() {
-  const router = useRouter();
+const router = useRouter();
 
-  const [currentStep, setCurrentStep] = useState(1);
+// STEP CONTROL
+const [currentStep, setCurrentStep] = useState(1);
+const totalSteps = 5;
+const isLastStep = currentStep === totalSteps;
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState([]);
+// FORM STATES
+const [title, setTitle] = useState("");
+const [description, setDescription] = useState("");
+const [tags, setTags] = useState([]);
 
-  // NEW LOCATION STATES
-  const [city, setCity] = useState("");
-  const [stateValue, setStateValue] = useState("");
+const [city, setCity] = useState("");
+const [stateValue, setStateValue] = useState("");
 
-  const [severity, setSeverity] = useState("");
+const [user, setUser] = useState(null);
 
-  const [user, setUser] = useState(null);
-  const totalSteps = 6;
-  const isLastStep = currentStep === totalSteps;
+// AUTH CHECK
+useEffect(() => {
+const u = getCurrentUser();
+if (!u) {
+router.push(`/auth/login?next=/report-problem`);
+return;
+}
+setUser(u);
+}, [router]);
 
-  useEffect(() => {
-    const u = getCurrentUser();
-    if (!u) {
-      router.push(`/auth/login?next=/report-problem`);
-      return;
-    }
-    setUser(u);
-  }, [router]);
+// FINAL SUBMIT (API CALL)
+  const handleSubmitProblem = async () => {
+  const token = localStorage.getItem("token");
+// VALIDATIONS
+if (!title.trim()) {
+return toast.error("Please add a title");
+}
 
-  const loadProblemsFromStorage = () => {
-    try {
-      const raw = localStorage.getItem("problems");
-      if (!raw) return [];
-      const parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  };
 
-  const saveProblemsToStorage = (arr) => {
-    localStorage.setItem("problems", JSON.stringify(arr));
-  };
+if (!description.trim()) {
+  return toast.error("Please add a description");
+}
 
-  const initialsFromName = (name = "") => {
-    if (!name) return "";
-    const p = name.trim().split(" ");
-    if (p.length === 1) return p[0].slice(0, 2).toUpperCase();
-    return (p[0][0] + p[p.length - 1][0]).toUpperCase();
-  };
+if (!city.trim() || !stateValue.trim()) {
+  return toast.error("Please provide both city and state");
+}
 
-  const handleSubmitProblem = () => {
-    if (!title.trim()) return toast.error("Please add a title");
-    if (!description.trim()) return toast.error("Please add a description");
-    if (!city.trim() || !stateValue.trim())
-      return toast.error("Please provide both city and state");
-    if (!severity) return toast.error("Please select severity");
-
-    const reporter = getCurrentUser() || user;
-    if (!reporter) {
-      toast.error("You must be signed in to submit a problem");
-      return router.push(`/auth/login?next=/report-problem`);
-    }
-
-    const problems = loadProblemsFromStorage();
-
-    const newProblem = {
-      id: Date.now(),
+try {
+  const response = await fetch("http://localhost:8080/problems", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
       title: title.trim(),
       description: description.trim(),
-      tags,
-      severity,
       city: city.trim(),
       state: stateValue.trim(),
-      location: `${city.trim()}, ${stateValue.trim()}`,
-      status: "Open",
-      votes: 0,
-      comments: 0,
-      createdAt: new Date().toISOString(),
-      reporterId: reporter.id,
-      author: reporter.name,
-      authorInitials: initialsFromName(reporter.name),
-    };
+      tags,
+    }),
+  });
 
-    saveProblemsToStorage([newProblem, ...problems]);
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || "Failed to create problem");
+  }
 
-    toast.success("Problem Submitted!", { duration: 2000 });
+  toast.success("Problem Submitted 🚀");
 
-    setTimeout(() => router.push("/dashboard"), 700);
-  };
+  setTimeout(() => {
+    router.push("/dashboard");
+  }, 700);
+} catch (error) {
+  console.error("Error submitting problem:", error);
+  toast.error("Something went wrong while submitting");
+}
 
-  const handleNextClick = () => {
-    if (currentStep === 1 && !title.trim())
-      return toast.error("Enter a title");
-    if (currentStep === 2 && !description.trim())
-      return toast.error("Enter a description");
-    if (currentStep === 4 && (!city.trim() || !stateValue.trim()))
-      return toast.error("Enter both city and state");
-    if (currentStep === 5 && !severity)
-      return toast.error("Select severity");
 
-    if (isLastStep) return handleSubmitProblem();
+};
 
-    setCurrentStep((s) => s + 1);
-  };
+// STEP NAVIGATION
+const handleNextClick = () => {
+if (currentStep === 1 && !title.trim()) {
+return toast.error("Enter a title");
+}
 
-  if (!user) return <p className="p-6 text-sm">Checking authentication...</p>;
 
-  // For Review Step
-  const locationForReview =
-    city || stateValue ? `${city}${city && stateValue ? ", " : ""}${stateValue}` : "";
+if (currentStep === 2 && !description.trim()) {
+  return toast.error("Enter a description");
+}
 
-  return (
-    <div>
-      <HeadingOfPage />
-      <ReportProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+if (currentStep === 3 && (!city.trim() || !stateValue.trim())) {
+  return toast.error("Enter both city and state");
+}
 
-      {currentStep === 1 && (
-        <TitleBoxDetail title={title} onChange={setTitle} />
-      )}
+if (isLastStep) {
+  handleSubmitProblem();
+  return;
+}
 
-      {currentStep === 2 && (
-        <DescriptionBoxDetail
-          description={description}
-          onChange={setDescription}
-        />
-      )}
-      {currentStep === 3 && (
-        <LocationBoxDetail
-          city={city}
-          state={stateValue}
-          onCityChange={setCity}
-          onStateChange={setStateValue}
-        />
-      )}
+setCurrentStep((prev) => prev + 1);
 
-      {currentStep === 4 && (
-        <TagBoxDetail selectedTags={tags} onChange={setTags} />
-      )}
 
-      
+};
 
-      {currentStep === 5 && (
-        <SeverityBoxDetail severity={severity} onChange={setSeverity} />
-      )}
+if (!user) {
+return <p className="p-6 text-sm">Checking authentication...</p>;
+}
 
-      {currentStep === 6 && (
-        <ReviewDetails
-          title={title}
-          description={description}
-          tags={tags}
-          location={locationForReview}
-          severity={severity}
-        />
-      )}
+// REVIEW LOCATION FORMAT
+const locationForReview =
+city || stateValue
+? `${city}${city && stateValue ? ", " : ""}${stateValue}`
+: "";
 
-      <div className="mt-6 flex justify-between max-w-4xl mx-auto">
-        <button
-          disabled={currentStep === 1}
-          onClick={() => setCurrentStep((s) => s - 1)}
-          className="px-4 py-2 text-sm border rounded-lg disabled:opacity-40"
-        >
-          Back
-        </button>
+return ( <div> <HeadingOfPage />
 
-        <button
-          onClick={handleNextClick}
-          className="px-4 py-2 text-sm bg-teal-500 text-white rounded-lg"
-        >
-          {isLastStep ? "Submit Problem" : "Next"}
-        </button>
-      </div>
-    </div>
-  );
+
+  <ReportProgressBar currentStep={currentStep} totalSteps={totalSteps} />
+
+  {/* STEP 1: TITLE */}
+  {currentStep === 1 && (
+    <TitleBoxDetail title={title} onChange={setTitle} />
+  )}
+
+  {/* STEP 2: DESCRIPTION */}
+  {currentStep === 2 && (
+    <DescriptionBoxDetail
+      description={description}
+      onChange={setDescription}
+    />
+  )}
+
+  {/* STEP 3: LOCATION */}
+  {currentStep === 3 && (
+    <LocationBoxDetail
+      city={city}
+      state={stateValue}
+      onCityChange={setCity}
+      onStateChange={setStateValue}
+    />
+  )}
+
+  {/* STEP 4: TAGS */}
+  {currentStep === 4 && (
+    <TagBoxDetail selectedTags={tags} onChange={setTags} />
+  )}
+
+  {/* STEP 5: REVIEW */}
+  {currentStep === 5 && (
+    <ReviewDetails
+      title={title}
+      description={description}
+      tags={tags}
+      location={locationForReview}
+    />
+  )}
+
+  {/* BUTTONS */}
+  <div className="mt-6 flex justify-between max-w-4xl mx-auto">
+    <button
+      disabled={currentStep === 1}
+      onClick={() => setCurrentStep((prev) => prev - 1)}
+      className="px-4 py-2 text-sm border rounded-lg disabled:opacity-40"
+    >
+      Back
+    </button>
+
+    <button
+      onClick={handleNextClick}
+      className="px-4 py-2 text-sm bg-teal-500 text-white rounded-lg"
+    >
+      {isLastStep ? "Submit Problem" : "Next"}
+    </button>
+  </div>
+</div>
+
+
+);
 }

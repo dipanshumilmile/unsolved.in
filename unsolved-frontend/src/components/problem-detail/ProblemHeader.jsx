@@ -108,9 +108,7 @@ export default function ProblemHeader({ problem }) {
           <span className="rounded-full bg-emerald-50 px-3 py-0.5 font-medium text-emerald-700">
             {problem.status.toLowerCase()}
           </span>
-          <span className="rounded-full bg-rose-50 px-3 py-0.5 font-medium text-rose-700">
-            {problem.severity.toLowerCase()}
-          </span>
+          
           {problem.tags.map((tag) => (
             <span
               key={tag}

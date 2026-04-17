@@ -19,11 +19,13 @@ export default function LoginForm() {
   setError("");
 
   try {
-    await login({ email, password });
-    
-    // 👇 Simple check: if user has profile data → dashboard, else → profile
-    const user = getCurrentUser();
-    router.push(user?.hasProfile ? "/dashboard" : "/profile");
+    const user = await login({ email, password });
+
+    if (!user.profileCompleted) {
+      router.push("/profile/complete");
+    } else {
+  router.push("/profile");
+}
   } catch (err) {
     setError(err.message || "Login failed");
   }

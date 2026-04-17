@@ -1,8 +1,8 @@
 "use client";
 
 export default function ProfileSkills({ user }) {
-  // If user is NOT a student → do NOT show skills
-  if (user.category !== "student") return null;
+  // 🎓 Only show for students
+  if (user.role !== "STUDENT") return null;
 
   const skills = user.skills || [];
 

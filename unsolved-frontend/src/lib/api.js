@@ -10,27 +10,30 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      headers: this.getHeaders(),
-      ...options,
-    });
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...this.getHeaders(),       // base headers
+      ...(options.headers || {}), // override safely
+    },
+  });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        localStorage.removeItem("token");
-        throw new Error("Session expired");
-      }
-      const err = await response.text();
-      throw new Error(err);
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      throw new Error("Session expired");
     }
-
-    const text = await response.text();
-    try {
-      return JSON.parse(text);
-    } catch {
-      return text;
-    }
+    const err = await response.text();
+    throw new Error(err);
   }
+
+  const text = await response.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
 
   async signup(data) {
     const role =

@@ -38,10 +38,7 @@ export default function ProblemRightColumn({ problem }) {
             </dd>
           </div>
           <div className="flex items-center justify-between">
-            <dt className="text-slate-500">Severity</dt>
-            <dd className="rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-medium text-rose-700">
-              {problem.severity.toLowerCase()}
-            </dd>
+            
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-slate-500">Reported</dt>

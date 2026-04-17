@@ -81,8 +81,7 @@ const steps = [
   { id: 2, label: 'Description', icon: <NotepadTextIcon className='w-4 h-4' /> },
   { id: 3, label: 'Location', icon: <MapPin className='w-4 h-4'/> },
   { id: 4, label: 'Tags', icon: <Tags className='w-4 h-4' /> },
-  { id: 5, label: 'Severity', icon: <TriangleAlert className='h-4 w-4'/> },
-  { id: 6, label: 'Review', icon: <Tickmark className='h-4 w-4 text-green-500'/>  },
+  { id: 5, label: 'Review', icon: <Tickmark className='h-4 w-4 text-green-500'/>  },
 ];
 
 export default function ReportProgressBar({ currentStep = 1 }) {

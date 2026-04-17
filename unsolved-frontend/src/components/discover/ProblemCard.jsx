@@ -1,4 +1,3 @@
-// src/components/discover/ProblemCard.jsx
 "use client";
 
 import Link from "next/link";
@@ -23,22 +22,42 @@ function Pill({ label, color = "gray" }) {
 }
 
 export default function ProblemCard({ problem }) {
+
   const [saved, setSaved] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [voteCount, setVoteCount] = useState(problem.votes);
+
+  // 🔥 FIXED: use backend field
+  const [voteCount, setVoteCount] = useState(problem.upvoteCount || 0);
+
   const [copied, setCopied] = useState(false);
 
-  const severityColor =
-    problem.severity === "High" || problem.severity === "Critical"
-      ? "red"
-      : problem.severity === "Medium"
-      ? "yellow"
-      : "gray";
+  // 🔥 TEMP local toggle (we’ll replace with API next)
+  const handleToggleLike = async () => {
+  const token = localStorage.getItem("token");
 
-  const handleToggleLike = () => {
+  try {
+    const res = await fetch(
+      `http://localhost:8080/problems/${problem.id}/upvote`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!res.ok) throw new Error("Failed");
+
+    // 🔥 Update UI optimistically
     setLiked((prev) => !prev);
-    setVoteCount((prev) => (liked ? prev - 1 : prev + 1));
-  };
+    setVoteCount((prev) =>
+      liked ? Math.max(prev - 1, 0) : prev + 1
+    );
+
+  } catch (err) {
+    console.error("Upvote failed", err);
+  }
+};
 
   const handleShare = async () => {
     try {
@@ -66,14 +85,18 @@ export default function ProblemCard({ problem }) {
   return (
     <Link href={`/problems/${problem.id}`} className="block">
       <article className="flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition cursor-pointer">
+
+        {/* HEADER */}
         <header className="mb-3 flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
             <Pill label={problem.status} color="green" />
-            <Pill label={problem.severity} color={severityColor} />
           </div>
-          <span className="text-xs text-gray-400">{problem.timeAgo}</span>
+
+          {/* 🔥 Removed timeAgo (not in backend) */}
+          <span className="text-xs text-gray-400">Recently</span>
         </header>
 
+        {/* TITLE + DESCRIPTION */}
         <div className="mb-3">
           <h3 className="mb-1 text-sm font-semibold text-sky-700">
             {problem.title}
@@ -83,13 +106,17 @@ export default function ProblemCard({ problem }) {
           </p>
         </div>
 
+        {/* LOCATION */}
         <div className="mb-3 flex items-center gap-1 text-xs text-gray-500">
           <span className="text-lg">📍</span>
-          <span>{problem.location}</span>
+          <span>
+            {problem.city}, {problem.state}
+          </span>
         </div>
 
+        {/* TAGS */}
         <div className="mb-3 flex flex-wrap gap-1">
-          {problem.tags.map((tag) => (
+          {problem.tags?.map((tag) => (
             <span
               key={tag}
               className="rounded-full bg-slate-50 px-2 py-0.5 text-[11px] font-medium text-slate-700"
@@ -99,9 +126,12 @@ export default function ProblemCard({ problem }) {
           ))}
         </div>
 
+        {/* FOOTER */}
         <footer className="mt-auto flex items-center justify-between border-t border-gray-50 pt-3">
+
           <div className="flex items-center gap-4 text-xs text-gray-500">
-            {/* Upvote */}
+
+            {/* 🔥 UPVOTE */}
             <button
               type="button"
               onClick={(e) => {
@@ -119,9 +149,7 @@ export default function ProblemCard({ problem }) {
               <span>{voteCount}</span>
             </button>
 
-            
-
-            {/* Save */}
+            {/* SAVE */}
             <button
               type="button"
               onClick={(e) => {
@@ -142,7 +170,7 @@ export default function ProblemCard({ problem }) {
               </span>
             </button>
 
-            {/* Share */}
+            {/* SHARE */}
             <button
               type="button"
               onClick={(e) => {
@@ -159,12 +187,14 @@ export default function ProblemCard({ problem }) {
             </button>
           </div>
 
+          {/* AUTHOR (TEMP FIX) */}
           <div className="flex items-center gap-2 text-xs text-gray-500">
             <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-[10px]">
-              {problem.authorInitials}
+              {problem.title?.charAt(0)}
             </span>
-            <span>{problem.author}</span>
+            <span>Unknown</span>
           </div>
+
         </footer>
       </article>
     </Link>

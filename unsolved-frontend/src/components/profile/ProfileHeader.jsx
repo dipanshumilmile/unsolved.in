@@ -20,7 +20,7 @@ export default function ProfileHeader({ user }) {
       setLocalPhoto(dataUrl);
       // Persist to localStorage (fake DB)
       try {
-        updateUser({ photo: dataUrl });
+        updateUser({ photo: dataUrl }, user.role);
       } catch (err) {
         console.error("Failed to save photo", err);
       }
@@ -29,10 +29,18 @@ export default function ProfileHeader({ user }) {
   };
 
   const professionLabel = (() => {
-    if (!user) return "";
-    if (user.category === "student") return user.profession || "B.Tech";
+  if (!user) return "";
+
+  if (user.role === "STUDENT") {
+    return user.degree || "Student";
+  }
+
+  if (user.role === "PROFESSIONAL") {
     return user.profession || "Professional";
-  })();
+  }
+
+  return "";
+})();
 
   const locationLabel = (user?.city || user?.state)? `${user?.city || ""}${user?.city && user?.state ? ", " : ""}${user?.state || ""}`: "Location not set";
 

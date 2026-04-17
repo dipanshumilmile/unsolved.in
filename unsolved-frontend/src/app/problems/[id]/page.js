@@ -2,18 +2,56 @@
 
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import problemsData from "@/data/problems.js";
+import { useEffect, useState } from "react";
+
 import ProblemHeader from "@/components/problem-detail/ProblemHeader";
 import ProblemRightColumn from "@/components/problem-detail/ProblemRightColumn";
 import ProblemDescription from "@/components/problem-detail/ProblemDescription";
 import ProblemComments from "@/components/problem-detail/ProblemComments";
 
 export default function ProblemDetailPage() {
+
   const params = useParams();
   const router = useRouter();
-  const id = Number(params.id);
-  const problem = problemsData.find((p) => p.id === id);
+  const problemId = params.id;
 
+  const [problem, setProblem] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // 🔥 FETCH PROBLEM FROM BACKEND
+  const fetchProblem = async () => {
+    try {
+      const res = await fetch(`http://localhost:8080/problems/${problemId}`);
+      
+      if (!res.ok) throw new Error("Problem not found");
+
+      const data = await res.json();
+      setProblem(data);
+
+    } catch (err) {
+      console.error("Error fetching problem:", err);
+      setProblem(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (problemId) {
+      fetchProblem();
+    }
+  }, [problemId]);
+
+  // 🔄 LOADING STATE
+  if (loading) {
+    return (
+      <main className="py-10 text-center text-sm text-gray-500">
+        Loading problem...
+      </main>
+    );
+  }
+
+  // ❌ NOT FOUND
   if (!problem) {
     return (
       <main className="bg-slate-50/60 py-10">
@@ -33,6 +71,7 @@ export default function ProblemDetailPage() {
   return (
     <main className="bg-slate-50/60 py-8">
       <div className="mx-auto max-w-6xl px-6 space-y-6">
+
         {/* Breadcrumbs */}
         <nav className="text-xs text-slate-500 flex items-center gap-1">
           <Link href="/" className="hover:underline">
@@ -54,10 +93,12 @@ export default function ProblemDetailPage() {
           <ProblemRightColumn problem={problem} />
         </div>
 
-      
+        {/* 🔥 DESCRIPTION */}
+        <ProblemDescription problem={problem} />
 
-        {/* Comments at bottom */}
-        <ProblemComments />
+        {/* 🔥 COMMENTS (PASS ID) */}
+        <ProblemComments problemId={problem.id} />
+
       </div>
     </main>
   );

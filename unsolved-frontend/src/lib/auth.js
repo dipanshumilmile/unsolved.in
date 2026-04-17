@@ -9,7 +9,8 @@ export async function signup({ name, email, password, category }) {
 export async function login({ email, password }) {
   const token = await api.login({ email, password });
   localStorage.setItem("token", token);
-  return getCurrentUser();
+
+  return await api.request("/profile/me");
 }
 
 export async function getCurrentUser() {
