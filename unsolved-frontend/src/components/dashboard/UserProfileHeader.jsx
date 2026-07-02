@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import { User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -9,12 +9,21 @@ const UserProfileHeader = () => {
   const router = useRouter();
   const [user, setUser] = useState(null); // prevent SSR mismatch
   const [isLoaded, setIsLoaded] = useState(false);
-
   useEffect(() => {
-    const u = getCurrentUser();
-    setUser(u);
-    setIsLoaded(true);
+    async function loadUser() {
+      const currentUser = await getCurrentUser();
+
+      console.log(currentUser);
+
+      setUser(currentUser);
+      console.log("Header User:", currentUser);
+      setIsLoaded(true);
+    }
+
+    loadUser();
   }, []);
+
+ 
 
   // ✨ Prevent hydration mismatch by rendering SAME HTML on server & first client paint
   if (!isLoaded) {
@@ -27,29 +36,24 @@ const UserProfileHeader = () => {
 
   const displayName = user?.name || "Welcome";
   const subtitle =
-    user?.category === "student"
-      ? `${user?.profession || "B.Tech"} student`
-      : user?.profession || "Professional";
+    user?.role === "STUDENT"
+      ? `${user?.PROFESSIONAL || "B.Tech"} student`
+      : user?.PROFESSIONAL || "Professional";
 
   const bio =
     user?.bio ||
     "No bio yet — add a short intro to let people know who you are.";
 
-  const photo = user?.photo || "/images/image.png";
+
+  
 
   return (
     <div className="w-full bg-white rounded-xl p-5 shadow-sm">
       <div className="flex justify-between">
         {/* Profile Photo & Name */}
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full overflow-hidden bg-gray-200">
-            <Image
-              src={photo}
-              alt="Profile"
-              width={64}
-              height={64}
-              className="w-full h-full object-cover"
-            />
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 border border-slate-200">
+            <User className="h-8 w-8 text-slate-500" />
           </div>
 
           <div>

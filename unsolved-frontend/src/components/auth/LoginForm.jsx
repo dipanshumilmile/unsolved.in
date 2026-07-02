@@ -13,23 +13,31 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
+    e.preventDefault();
 
-  try {
-    const user = await login({ email, password });
+    setError("");
+    setLoading(true); // Start loading
 
-    if (!user.profileCompleted) {
-      router.push("/profile/complete");
-    } else {
-  router.push("/profile");
-}
-  } catch (err) {
-    setError(err.message || "Login failed");
-  }
-};
+    try {
+      const user = await login({
+        email,
+        password,
+      });
+
+      if (!user.profileCompleted) {
+        router.push("/profile/complete");
+      } else {
+        router.push("/profile");
+      }
+    } catch (err) {
+      setError(err.message || "Login failed");
+    } finally {
+      setLoading(false); // Stop loading
+    }
+  };
 
 
   return (
@@ -97,18 +105,15 @@ export default function LoginForm() {
         </div>
 
         {/* Error */}
-        {error && (
-          <p className="text-xs text-red-500 mt-1">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
 
         {/* Sign in button */}
         <button
           type="submit"
-          className="mt-3 w-full rounded-lg bg-cyan-500 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-cyan-600"
+          disabled={loading}
+          className="mt-3 w-full rounded-lg bg-cyan-500 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-cyan-600 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Sign In
+          {loading ? "Signing In..." : "Sign In"}
         </button>
       </form>
 

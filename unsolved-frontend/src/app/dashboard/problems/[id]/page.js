@@ -1,53 +1,84 @@
-// src/app/dashboard/problems/[id]/page.js
 "use client";
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import problemsData from "@/data/problems";
-import solutionsData from "@/data/solutionsData";
+import { api } from "@/lib/api";
 
 import ProblemDetailHeader from "@/components/dashboard/ProblemDetailHeader";
-import SolutionsSection from "@/components/dashboard/SolutionsSection";
+import SolutionsList from "@/components/dashboard/SolutionsList";
 
 export default function ProblemDetailPage() {
-  const params = useParams();
+  const { id } = useParams();
   const router = useRouter();
-  const id = parseInt(params.id, 10);
 
-  const problem = problemsData.find((p) => p.id === id);
-  const solutions = solutionsData.filter((s) => s.problemId === id);
+  const [problem, setProblem] = useState(null);
+  const [solutions, setSolutions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  async function loadData() {
+    try {
+      const [problemData, solutionData] = await Promise.all([
+        api.getProblem(id),
+        api.getSolutions(id),
+      ]);
+
+      setProblem(problemData);
+      setSolutions(solutionData);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, [id]);
+
+  async function handleAccept(solutionId) {
+    try {
+      await api.acceptSolution(solutionId);
+      await loadData();
+    } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  if (loading) {
+    return (
+      <main className="p-6">
+        Loading...
+      </main>
+    );
+  }
 
   if (!problem) {
     return (
-      <main className="min-h-screen bg-gray-50">
-        <div className="max-w-4xl mx-auto py-6 px-4">
-          <button
-            onClick={() => router.back()}
-            className="mb-3 text-xs text-sky-600"
-          >
-            ← Back
-          </button>
-          <div className="rounded-xl bg-white p-6 text-sm text-gray-600 shadow-sm">
-            Problem not found.
-          </div>
-        </div>
+      <main className="p-6">
+        Problem not found.
       </main>
     );
   }
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto py-6 px-4 space-y-4">
+      <div className="mx-auto max-w-5xl space-y-6 px-6 py-6">
+
         <button
           onClick={() => router.back()}
-          className="text-xs text-sky-600"
+          className="text-sm text-sky-600"
         >
-          ← Back to Dashboard
+          ← Back
         </button>
 
         <ProblemDetailHeader problem={problem} />
-        <SolutionsSection solutions={solutions} />
+
+        <SolutionsList
+          solutions={solutions}
+          onAccept={handleAccept}
+        />
+
       </div>
     </main>
   );

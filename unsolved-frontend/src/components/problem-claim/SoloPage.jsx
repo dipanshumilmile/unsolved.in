@@ -19,7 +19,7 @@ export default function SoloPage({ problem }) {
     e.preventDefault();
     if (!isValid) return;
 
-    const projectId = 1; // placeholder
+    const projectId = problem.id;
     const params = new URLSearchParams({
       startDate,
       targetDate,

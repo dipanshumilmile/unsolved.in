@@ -16,8 +16,12 @@ export default function Navbar() {
   const router = useRouter();
 
   useEffect(() => {
-    const current = getCurrentUser();
-    setUser(current);
+    async function loadUser() {
+      const current = await getCurrentUser();
+      setUser(current);
+    }
+
+    loadUser();
   }, []);
 
   // close dropdown when clicking outside
@@ -39,7 +43,7 @@ export default function Navbar() {
     logout();
     setUser(null);
     setOpen(false);
-    router.push("/auth/login");
+    router.push("/");
   };
 
   return (
@@ -50,9 +54,9 @@ export default function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-sky-500 text-sm font-bold text-white shadow-sm">
             U
           </div>
-          <a href="/" className="text-sm font-semibold tracking-tight">
+          <Link href="/" className="text-sm font-semibold tracking-tight">
             Unsolved<span className="text-cyan-500">.in</span>
-          </a>
+          </Link>
         </div>
 
         {/* Center nav */}
@@ -64,26 +68,31 @@ export default function Navbar() {
             Report Problem
           </a>
           <a href="/dashboard" className="hover:text-slate-900">
-            Dashboard
+            My Dashboard
           </a>
         </nav>
 
         {/* Right actions */}
         <div className="flex items-center gap-6">
           <Link href="/discover">
-          <button href="/discover"
-            className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
-            aria-label="Search"
-          >
-            <Search color="#14191a" width={20}/>
-          </button></Link>
+            <button
+              href="/discover"
+              className="hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
+              aria-label="Search"
+            >
+              <Search color="#14191a" width={20} />
+            </button>
+          </Link>
 
           <button
-            className="relative hidden h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white text-xs text-slate-600 shadow-sm hover:bg-slate-50 md:flex"
-            aria-label="Notifications"
+            disabled
+            className="relative hidden h-9 w-9 cursor-not-allowed items-center justify-center rounded-full border border-slate-200 bg-white opacity-50 md:flex"
           >
             <Bell color="#ffea00" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white">
+            <span
+              title="Notifications coming soon"
+              className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white"
+            >
               2
             </span>
           </button>
@@ -97,14 +106,7 @@ export default function Navbar() {
                 className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-xs text-slate-600 shadow-sm hover:bg-slate-100 overflow-hidden"
                 aria-label="Profile"
               >
-                <Image
-                  src={user?.photo || "/images/image.png"}
-                  alt="Profile"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 rounded-full object-cover"
-              />
-
+                <UserRound className="h-5 w-5 text-slate-500" />
               </button>
 
               {/* Dropdown */}

@@ -7,7 +7,7 @@ import ProblemCard from "@/components/discover/ProblemCard";
 import EmptyState from "@/components/shared/EmptyState";
 
 export default function ProblemsList({ problems }) {
-  const router = useRouter();
+
 
   if (!problems || problems.length === 0) {
     return <EmptyState message="No problems found for this filter." />;
@@ -19,7 +19,7 @@ export default function ProblemsList({ problems }) {
         <ProblemCard
           key={p.id}
           problem={p}
-          onClick={() => router.push(`/dashboard/problems/${p.id}`)}
+          
         />
       ))}
     </div>

@@ -2,6 +2,9 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
+
+const router = useRouter();
 
 function Pill({ label, colorClass }) {
   return (
@@ -12,35 +15,39 @@ function Pill({ label, colorClass }) {
     </span>
   );
 }
+const STATUS_CONFIG = {
+  OPEN: {
+    label: "Open",
+    color: "bg-sky-100 text-sky-700",
+  },
+  IN_PROGRESS: {
+    label: "In Progress",
+    color: "bg-amber-100 text-amber-700",
+  },
+  SOLVED: {
+    label: "Solved",
+    color: "bg-emerald-100 text-emerald-700",
+  },
+};
+
+const status = STATUS_CONFIG[problem.status] ?? {
+  label: problem.status,
+  color: "bg-gray-100 text-gray-700",
+};
 
 export default function ProblemDetailHeader({ problem }) {
   if (!problem) return null;
 
-  const severityLabel =
-    problem.severity === "High"
-      ? "High Severity"
-      : problem.severity === "Critical"
-      ? "Critical Severity"
-      : `${problem.severity} Severity`;
-
-  const severityColor =
-    problem.severity === "High"
-      ? "bg-orange-50 text-orange-700"
-      : problem.severity === "Critical"
-      ? "bg-red-50 text-red-700"
-      : "bg-gray-100 text-gray-700";
-
+  
   return (
     <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
       {/* status row */}
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Pill label={problem.status} colorClass="bg-cyan-50 text-cyan-700" />
-          <Pill label={severityLabel} colorClass={severityColor} />
+          <Pill label={status.label} colorClass={status.color} />
         </div>
 
-        <button className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-slate-700 hover:bg-gray-50">
-          {/* eye icon placeholder */}
+        <button onClick={() => router.push(`/problems/${problem.id}`)}>
           View Public Page →
         </button>
       </div>
@@ -51,15 +58,15 @@ export default function ProblemDetailHeader({ problem }) {
 
       {/* Meta */}
       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs text-gray-500">
-        <span>📍 {problem.location}</span>
-        <span>🗓️ Submitted {problem.timeAgo}</span>
-        <span>⬆ {problem.votes} upvotes</span>
+        <span>
+          📍 {problem.city}, {problem.state}
+        </span>
+        <span>🗓️ Submitted </span>
+        <span>⬆ {problem.upvoteCount} upvotes</span>
       </div>
 
       {/* Big description */}
-      <p className="mb-3 text-sm text-gray-700">
-        {problem.description}
-      </p>
+      <p className="mb-3 text-sm text-gray-700">{problem.description}</p>
 
       {/* Tags */}
       <div className="flex flex-wrap gap-2">

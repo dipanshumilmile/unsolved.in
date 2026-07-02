@@ -1,28 +1,31 @@
-import React from "react";
+"use client";
+
+import { useRouter } from "next/navigation";
 
 export default function HeadingOfPage() {
+  const router = useRouter();
+
   return (
-    <header className="px-4 py-6 bg-slate-50 border-b border-slate-200">
-      {/* Centered block containing button + text */}
-      <div
-        className="mx-auto flex flex-col gap-4 items-start"
-        style={{ maxWidth: "800px" }}
-      >
-        {/* Back button with border + rounded */}
+    <header className="border-b border-slate-200 bg-slate-50 px-4 py-6">
+      <div className="mx-auto flex max-w-4xl flex-col items-start gap-4">
+        {/* Back Button */}
         <button
-          className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-700 border border-slate-300 rounded-lg bg-white hover:bg-slate-50 hover:border-slate-400 transition"
+          type="button"
+          onClick={() => router.back()}
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
         >
           <span className="text-lg leading-none">←</span>
           <span>Back</span>
         </button>
 
-        {/* Heading + subtitle */}
+        {/* Heading */}
         <div>
           <h1 className="text-3xl font-semibold text-slate-900">
             Report a Problem
           </h1>
+
           <p className="mt-2 text-sm text-slate-500">
-            Help your community by reporting issues that need attention
+            Help your community by reporting issues that need attention.
           </p>
         </div>
       </div>

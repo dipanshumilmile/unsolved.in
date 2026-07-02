@@ -1,50 +1,99 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import problemsData from "@/data/problems.js";
+
+import { api } from "@/lib/api";
 import ProjectWorkspacePage from "@/components/project/ProjectWorkspacePage";
 
 function diffInDays(startISO, endISO) {
   const start = new Date(startISO);
   const end = new Date(endISO);
-  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null;
-  const ms = end.getTime() - start.getTime();
-  const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
-  return days;
+
+  if (isNaN(start) || isNaN(end)) return null;
+
+  return Math.ceil(
+    (end.getTime() - start.getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
 }
 
 export default function ProjectWorkspaceWrapper() {
+
   const params = useParams();
   const searchParams = useSearchParams();
 
   const id = Number(params.id);
 
-  const problem = problemsData.find((p) => p.id === 1) || problemsData[0];
+  const [problem, setProblem] = useState(null);
 
-  // dates are coming from Start Team / Work Solo pages (type="date" => ISO yyyy‑mm‑dd)
-  const startDateRaw = searchParams.get("startDate");
-  const targetDateRaw = searchParams.get("targetDate");
+  useEffect(() => {
 
-  // fallback (optional pretty strings)
-  const startDate = startDateRaw || "2024-12-01";
-  const targetDate = targetDateRaw || "2024-12-31";
+    async function loadProblem() {
 
-  const type = searchParams.get("type") || "team";
+      try {
 
-  const daysLeft = diffInDays(startDate, targetDate);
-  const timeLeft =
-    daysLeft == null ? "-" : `${daysLeft} day${daysLeft === 1 ? "" : "s"}`;
+        const data = await api.getProblem(id);
+
+        setProblem(data);
+
+      } catch (err) {
+
+        console.error(err);
+
+      }
+
+    }
+
+    loadProblem();
+
+  }, [id]);
+
+  if (!problem) {
+
+    return <div>Loading...</div>;
+
+  }
+
+  const startDate =
+    searchParams.get("startDate") || "2024-12-01";
+
+  const targetDate =
+    searchParams.get("targetDate") || "2024-12-31";
+
+  const type =
+    searchParams.get("type") || "team";
+
+  const daysLeft =
+    diffInDays(startDate, targetDate);
 
   const project = {
+
     id,
+
     title:
-      (type === "team" ? "Team Solution: " : "Solo Project: ") +
-      problem.title,
+      (type === "team"
+        ? "Team Solution: "
+        : "Solo Project: ") + problem.title,
+
     type,
-    startDate,   // ProjectWorkspacePage shows these as text
+
+    startDate,
+
     targetDate,
-    timeLeft,
+
+    timeLeft:
+      daysLeft == null
+        ? "-"
+        : `${daysLeft} day${daysLeft === 1 ? "" : "s"}`,
+
   };
 
-  return <ProjectWorkspacePage problem={problem} project={project} />;
+  return (
+    <ProjectWorkspacePage
+      problem={problem}
+      project={project}
+    />
+  );
+
 }

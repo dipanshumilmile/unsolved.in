@@ -14,13 +14,16 @@ export default function CallToActionSection() {
         </p>
 
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <button className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-sky-700 shadow-sm hover:bg-slate-50">
+          <button
+            onClick={() => router.push("/report")}
+            className="rounded-full bg-white px-5 py-2 text-xs font-semibold text-sky-700 shadow-sm hover:bg-slate-50"
+          >
             Report a Problem
           </button>
-          <button 
-          className=" rounded-full border border-sky-100/70 bg-sky-500/20 px-5 py-2 text-xs font-semibold text-white hover:bg-sky-500/30"
-          onClick={() => router.push("/discover")}>
-
+          <button
+            className=" rounded-full border border-sky-100/70 bg-sky-500/20 px-5 py-2 text-xs font-semibold text-white hover:bg-sky-500/30"
+            onClick={() => router.push("/discover")}
+          >
             Find a Problem to Solve
           </button>
         </div>

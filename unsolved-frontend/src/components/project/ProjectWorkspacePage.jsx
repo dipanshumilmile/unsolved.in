@@ -4,6 +4,9 @@
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
+
+
 
 const INITIAL_SECTIONS = [
   {
@@ -38,6 +41,8 @@ const INITIAL_SECTIONS = [
   },
 ];
 
+
+
 export default function ProjectWorkspacePage({ problem, project }) {
   const router = useRouter();
   const [tab, setTab] = useState("progress"); // "progress" | "submit"
@@ -67,6 +72,53 @@ export default function ProjectWorkspacePage({ problem, project }) {
       )
     );
   };
+  const [summary, setSummary] = useState("");
+const [repoUrl, setRepoUrl] = useState("");
+const [demoUrl, setDemoUrl] = useState("");
+
+const [loading, setLoading] = useState(false);
+const [error, setError] = useState("");
+const [success, setSuccess] = useState("");
+  const handleSubmit = async () => {
+
+    setError("");
+    setSuccess("");
+
+    if (!summary.trim()) {
+        setError("Solution summary is required.");
+        return;
+    }
+
+    try {
+
+        setLoading(true);
+
+        await api.submitSolution({
+
+            problemId: problem.id,
+            summary,
+            repoUrl,
+            demoUrl
+
+        });
+
+        setSuccess("Solution submitted successfully.");
+
+        setSummary("");
+        setRepoUrl("");
+        setDemoUrl("");
+
+    } catch (err) {
+
+        setError(err.message);
+
+    } finally {
+
+        setLoading(false);
+
+    }
+
+};
 
   return (
     <main className="bg-slate-50/60 py-10">
@@ -144,7 +196,7 @@ export default function ProjectWorkspacePage({ problem, project }) {
           </button>
           <button
             type="button"
-            onClick={() => setTab("submit")}
+            onClick={() => setTab("handleSubmit")}
             className={`rounded-full px-4 py-2 text-sm font-medium ${
               tab === "submit"
                 ? "bg-slate-900 text-white"
@@ -232,12 +284,14 @@ export default function ProjectWorkspacePage({ problem, project }) {
                     Solution Summary <span className="text-rose-500">*</span>
                   </label>
                   <textarea
-                    rows={6}
-                    placeholder="Describe your solution, how it works, and its impact..."
-                    className="w-full resize-none rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
-                  />
+    value={summary}
+    onChange={(e)=>setSummary(e.target.value)}
+    rows={6}
+    placeholder="Describe your solution..."
+    className="..."
+/>
                   <p className="mt-1 text-[11px] text-slate-400">
-                    0/2000 characters
+                    {summary.length}/2000 characters
                   </p>
                 </div>
 
@@ -248,8 +302,8 @@ export default function ProjectWorkspacePage({ problem, project }) {
                   </label>
                   <input
                     type="url"
-                    placeholder="https://github.com/username/repo"
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
+                    value={repoUrl}
+                    onChange={(e)=>setRepoUrl(e.target.value)}
                   />
                 </div>
 
@@ -259,10 +313,10 @@ export default function ProjectWorkspacePage({ problem, project }) {
                     Demo URL
                   </label>
                   <input
-                    type="url"
-                    placeholder="https://your-demo-site.com"
-                    className="w-full rounded-2xl border border-slate-200 bg-slate-50/60 px-3 py-2.5 text-sm text-slate-900 focus:border-sky-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-sky-500"
-                  />
+    type="url"
+    value={demoUrl}
+    onChange={(e)=>setDemoUrl(e.target.value)}
+/>
                 </div>
 
                 {/* Attachments */}
@@ -273,6 +327,7 @@ export default function ProjectWorkspacePage({ problem, project }) {
                   <div className="grid gap-3 md:grid-cols-4 text-xs text-slate-600">
                     {["Documents", "Images", "Videos", "Other"].map(
                       (label) => (
+                        
                         <button
                           key={label}
                           type="button"
@@ -292,13 +347,28 @@ export default function ProjectWorkspacePage({ problem, project }) {
                       )
                     )}
                   </div>
-                </div>
+                  </div>
+                  {error && (
+    <p className="text-red-600 text-sm">
+        {error}
+    </p>
+)}
+
+{success && (
+    <p className="text-green-600 text-sm">
+        {success}
+    </p>
+)}
 
                 {/* Submit button */}
                 <div className="border-t border-slate-100 pt-4">
-                  <button className="w-full rounded-full bg-sky-500 py-2.5 text-sm font-medium text-white hover:bg-sky-600">
-                    Submit Solution
-                  </button>
+                  <button
+    onClick={handleSubmit}
+    disabled={loading}
+    className="w-full rounded-full bg-sky-500 py-2.5 text-sm font-medium text-white hover:bg-sky-600 disabled:opacity-60"
+>
+    {loading ? "Submitting..." : "Submit Solution"}
+</button>
                 </div>
               </div>
             )}

@@ -14,7 +14,12 @@ export async function login({ email, password }) {
 }
 
 export async function getCurrentUser() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   const token = localStorage.getItem("token");
+
   if (!token) return null;
 
   try {
@@ -42,9 +47,15 @@ export async function updateUser(data, role) {
 }
 
 export function logout() {
-  localStorage.removeItem("token");
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("token");
+  }
 }
 
 export function isAuthenticated() {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
   return !!localStorage.getItem("token");
 }

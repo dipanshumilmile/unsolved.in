@@ -15,21 +15,28 @@ export default function SignupForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
+    setLoading(true);
 
     try {
-      signup({
+      await signup({
         name: fullName,
         email,
         password,
         category,
       });
+
       router.push("/profile/complete");
     } catch (err) {
       setError(err.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,9 +74,7 @@ export default function SignupForm() {
 
         {/* Category */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-700">
-            Category
-          </label>
+          <label className="text-xs font-medium text-slate-700">Category</label>
           <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
             <User size={16} className="text-slate-400" />
             <select
@@ -83,16 +88,13 @@ export default function SignupForm() {
               </option>
               <option value="student">Student</option>
               <option value="professional">Professional</option>
-
             </select>
           </div>
         </div>
 
         {/* Email */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-700">
-            Email
-          </label>
+          <label className="text-xs font-medium text-slate-700">Email</label>
           <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
             <Mail size={16} className="text-slate-400" />
             <input
@@ -108,9 +110,7 @@ export default function SignupForm() {
 
         {/* Password */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-slate-700">
-            Password
-          </label>
+          <label className="text-xs font-medium text-slate-700">Password</label>
           <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
             <Lock size={16} className="text-slate-400" />
             <input
@@ -132,18 +132,15 @@ export default function SignupForm() {
         </div>
 
         {/* Error */}
-        {error && (
-          <p className="text-xs text-red-500 mt-1">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-xs text-red-500 mt-1">{error}</p>}
 
         {/* Create account button */}
         <button
           type="submit"
-          className="mt-3 w-full rounded-lg bg-cyan-500 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-cyan-600"
+          disabled={loading}
+          className="mt-3 w-full rounded-lg bg-cyan-500 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-cyan-600 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          Create Account
+          {loading ? "Creating Account..." : "Create Account"}
         </button>
       </form>
 

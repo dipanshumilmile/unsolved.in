@@ -1,79 +1,50 @@
 "use client";
 
-const STATUS_OPTIONS = ["Open", "In Progress", "Claimed", "Solved"];
-const SEVERITY_OPTIONS = ["Low", "Medium", "High", "Critical"];
+const STATUS_OPTIONS = [
+  { value: "OPEN", label: "Open" },
+  { value: "IN_PROGRESS", label: "In Progress" },
+  { value: "SOLVED", label: "Solved" },
+];
 
 export default function FiltersSidebar({ filters, onChange }) {
   const handleStatusToggle = (status) => {
     const current = filters.statuses || [];
-    const exists = current.includes(status);
-    const next = exists
+
+    const next = current.includes(status)
       ? current.filter((s) => s !== status)
       : [...current, status];
-    onChange({ ...filters, statuses: next });
-  };
 
-  const handleSeverityToggle = (severity) => {
-    const current = filters.severities || [];
-    const exists = current.includes(severity);
-    const next = exists
-      ? current.filter((s) => s !== severity)
-      : [...current, severity];
-    onChange({ ...filters, severities: next });
+    onChange({
+      ...filters,
+      statuses: next,
+    });
   };
 
   const selectedStatuses = filters.statuses || [];
-  const selectedSeverities = filters.severities || [];
 
   return (
-    <aside className="w-64 shrink-0 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">Filters</h2>
+    <aside className="w-full rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:w-64">
+      <h2 className="mb-4 text-sm font-semibold text-gray-800">Filters</h2>
 
-      {/* Status */}
-      <div className="mb-4">
-        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
+      <div>
+        <p className="mb-3 text-xs font-medium uppercase tracking-wide text-gray-500">
           Status
         </p>
-        <div className="space-y-1 text-sm">
+
+        <div className="space-y-2">
           {STATUS_OPTIONS.map((status) => (
             <label
-              key={status}
-              className="flex cursor-pointer items-center gap-2 text-gray-700"
+              key={status.value}
+              className="flex cursor-pointer items-center gap-3 rounded-lg p-2 transition hover:bg-slate-50"
             >
               <input
                 type="checkbox"
-                name="status"
-                value={status}
-                checked={selectedStatuses.includes(status)}
-                onChange={() => handleStatusToggle(status)}
-                className="h-3.5 w-3.5 text-sky-500 focus:ring-sky-500"
+                checked={selectedStatuses.includes(status.value)}
+                onChange={() => handleStatusToggle(status.value)}
+                className="h-4 w-4 rounded border-gray-300 text-sky-500 focus:ring-sky-500"
               />
-              {status}
-            </label>
-          ))}
-        </div>
-      </div>
 
-      {/* Severity */}
-      <div>
-        <p className="mb-2 text-xs font-medium uppercase tracking-wide text-gray-500">
-          Severity
-        </p>
-        <div className="space-y-1 text-sm">
-          {SEVERITY_OPTIONS.map((severity) => (
-            <label
-              key={severity}
-              className="flex cursor-pointer items-center gap-2 text-gray-700"
-            >
-              <input
-                type="checkbox"
-                name="severity"
-                value={severity}
-                checked={selectedSeverities.includes(severity)}
-                onChange={() => handleSeverityToggle(severity)}
-                className="h-3.5 w-3.5 text-sky-500 focus:ring-sky-500"
-              />
-              {severity}
+              <span className="text-sm text-gray-700">{status.label}</span>
             </label>
           ))}
         </div>

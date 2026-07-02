@@ -7,26 +7,26 @@ const OPTIONS = [
   {
     id: "start-team",
     title: "Start a Team",
-    description:
-      "Create a new team and invite others to collaborate on solving this problem together.",
+    description: "Create a new team and invite others to collaborate.",
     iconBg: "bg-cyan-500",
     iconEmoji: "👥",
+    disabled: true,
   },
   {
     id: "join-team",
     title: "Join Existing Team",
-    description:
-      "Browse teams already working on this problem and request to join one.",
+    description: "Browse existing teams and request to join.",
     iconBg: "bg-sky-500",
     iconEmoji: "➕",
+    disabled: true,
   },
   {
     id: "work-solo",
     title: "Work Solo",
-    description:
-      "Take on this challenge independently while still sharing updates with the community.",
+    description: "Work independently and submit your solution.",
     iconBg: "bg-violet-500",
     iconEmoji: "✋",
+    disabled: false,
   },
 ];
 
@@ -47,10 +47,7 @@ export default function ClaimProblemPage({ problem }) {
               Problems
             </Link>
             <span>›</span>
-            <Link
-              href={`/problems/${problem.id}`}
-              className="hover:underline"
-            >
+            <Link href={`/problems/${problem.id}`} className="hover:underline">
               {problem.title}
             </Link>
             <span>›</span>
@@ -79,23 +76,51 @@ export default function ClaimProblemPage({ problem }) {
         {/* Options list */}
         <section className="space-y-4">
           {OPTIONS.map((opt) => {
-            let href = null;
-            if (opt.id === "start-team") {
-              href = `/problems/${problem.id}/claim/start-team`;
-            } else if (opt.id === "join-team") {
-              href = `/problems/${problem.id}/claim/join-team`;
-            } else if (opt.id === "work-solo") {
-              href = `/problems/${problem.id}/claim/solo`;
+            const href =
+              opt.id === "work-solo"
+                ? `/problems/${problem.id}/claim/solo`
+                : null;
+
+            if (opt.disabled) {
+              return (
+                <div
+                  key={opt.id}
+                  className="flex w-full cursor-not-allowed items-center justify-between rounded-3xl border border-slate-100 bg-white px-5 py-4 text-left opacity-60 shadow-sm"
+                >
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`flex h-12 w-12 items-center justify-center rounded-2xl text-xl text-white ${opt.iconBg}`}
+                    >
+                      {opt.iconEmoji}
+                    </div>
+
+                    <div>
+                      <h2 className="text-sm font-semibold text-slate-900">
+                        {opt.title}
+                      </h2>
+
+                      <p className="mt-1 text-xs text-slate-500">
+                        {opt.description}
+                      </p>
+
+                      <p className="mt-2 text-[11px] font-medium text-amber-600">
+                        🚧 Available in a future update
+                      </p>
+                    </div>
+                  </div>
+
+                  <span className="rounded-full bg-amber-100 px-3 py-1 text-[10px] font-semibold text-amber-700">
+                    Coming Soon
+                  </span>
+                </div>
+              );
             }
 
-            const Wrapper = href ? Link : "button";
-            const wrapperProps = href ? { href } : { type: "button" };
-
             return (
-              <Wrapper
+              <Link
                 key={opt.id}
-                {...wrapperProps}
-                className="flex w-full items-center justify-between rounded-3xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm hover:shadow-md hover:-translate-y-0.5 transition"
+                href={href}
+                className="flex w-full items-center justify-between rounded-3xl border border-slate-100 bg-white px-5 py-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 <div className="flex items-center gap-4">
                   <div
@@ -103,10 +128,12 @@ export default function ClaimProblemPage({ problem }) {
                   >
                     {opt.iconEmoji}
                   </div>
+
                   <div>
                     <h2 className="text-sm font-semibold text-slate-900">
                       {opt.title}
                     </h2>
+
                     <p className="mt-1 text-xs text-slate-500">
                       {opt.description}
                     </p>
@@ -114,7 +141,7 @@ export default function ClaimProblemPage({ problem }) {
                 </div>
 
                 <span className="text-slate-400">›</span>
-              </Wrapper>
+              </Link>
             );
           })}
         </section>

@@ -45,24 +45,24 @@ export default function Footer() {
               Resources
             </h4>
             <div className="flex flex-col gap-1">
-              <a href="#" className="hover:text-slate-700">
-                Documentation
-              </a>
-              <a href="#" className="hover:text-slate-700">
-                API
-              </a>
-              <a href="#" className="hover:text-slate-700">
-                Community
-              </a>
-              <a href="#" className="hover:text-slate-700">
-                Blog
-              </a>
+              <span className="cursor-not-allowed text-slate-400">
+                Documentation (Coming Soon)
+              </span>
+              <span className="cursor-not-allowed text-slate-400">
+                API (Coming Soon)
+              </span>
+              <span className="cursor-not-allowed text-slate-400">
+                Community (Coming Soon)
+              </span>
+              <span className="cursor-not-allowed text-slate-400">
+                Blog (Coming Soon)
+              </span>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-              Company
+          <div className="space-y-2"> 
+            <h4 className="cursor-not-allowed text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Company (comming soon)
             </h4>
             <div className="flex flex-col gap-1">
               <a href="#" className="hover:text-slate-700">
@@ -81,8 +81,8 @@ export default function Footer() {
           </div>
 
           <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold uppercase tracking-wide text-slate-400">
-              Legal
+            <h4 className="cursor-not-allowed text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+              Legal (comming soon)
             </h4>
             <div className="flex flex-col gap-1">
               <a href="#" className="hover:text-slate-700">
