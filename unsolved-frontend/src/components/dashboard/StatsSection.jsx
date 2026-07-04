@@ -20,6 +20,12 @@ export default function StatsSection() {
     async function loadDashboard() {
       try {
         const currentUser = await getCurrentUser();
+
+        // 🔒 Don't call protected API if user isn't logged in
+        if (!currentUser) {
+          return;
+        }
+
         setUser(currentUser);
 
         const dashboardStats = await api.getDashboardStats();
@@ -45,7 +51,7 @@ export default function StatsSection() {
         icon={NotepadTextIcon}
       />
 
-      {user.category === "STUDENT" ? (
+      {user.role === "STUDENT" ? (
         <>
           <StatsCard
             title="Solutions Submitted"

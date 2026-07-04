@@ -9,6 +9,7 @@ import ProblemsList from "@/components/dashboard/ProblemsList";
 import TeamsList from "@/components/dashboard/TeamsList";
 import SidePanel from "@/components/dashboard/SidePanel";
 import SubmissionList from "@/components/dashboard/SubmissionList";
+import { useRouter } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth";
 import { api } from "@/lib/api";
@@ -25,46 +26,38 @@ export default function DashboardPage() {
   const [savedProblems, setSavedProblems] = useState([]);
 
   useEffect(() => {
+  async function loadDashboard() {
+    try {
+      const currentUser = await getCurrentUser();
 
-    async function loadDashboard() {
-
-      try {
-
-        const currentUser = await getCurrentUser();
-
-        setUser(currentUser);
-
-        if (currentUser?.role === "STUDENT") {
-
-          setActiveFilter("my-problems");
-
-        } else {
-
-          setActiveFilter("my-problems");
-
-        }
-
-        const problems =
-          await api.getMyProblems();
-
-        setMyProblems(problems);
-
-        const saved =
-          await api.getSavedProblems();
-
-        setSavedProblems(saved);
-
-      } catch (err) {
-
-        console.error(err);
-
+      // 🔒 Redirect if not logged in
+      if (!currentUser) {
+        router.push("/auth/login");
+        return;
       }
 
+      setUser(currentUser);
+
+      setActiveFilter("my-problems");
+
+      const problems = await api.getMyProblems();
+      setMyProblems(problems);
+
+      const saved = await api.getSavedProblems();
+      setSavedProblems(saved);
+
+    } catch (err) {
+      console.error(err);
+
+      // JWT expired or invalid
+      router.push("/auth/login");
     }
+  }
 
-    loadDashboard();
-
+  loadDashboard();
   }, []);
+  
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-gray-50">
