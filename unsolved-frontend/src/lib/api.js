@@ -35,41 +35,43 @@ class ApiService {
    * - Error handling
    * - Session expiration
    */
-  async request(endpoint, options = {}) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-      ...options,
-      headers: {
-        ...this.getHeaders(),
-        ...(options.headers || {}),
-      },
-    });
+ async request(endpoint, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...this.getHeaders(),
+      ...(options.headers || {}),
+    },
+  });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        localStorage.removeItem("token");
-        throw new Error("Session expired");
-      }
-
-      let message = "Something went wrong";
-
-      try {
-        const error = await response.json();
-        message = error.message || message;
-      } catch {
-        message = await response.text();
-      }
-
-      throw new Error(message);
+  if (!response.ok) {
+    if (response.status === 401) {
+      localStorage.removeItem("token");
+      throw new Error("Session expired");
     }
 
-    const text = await response.text();
+    const errorText = await response.text();
 
-    try {
-      return JSON.parse(text);
-    } catch {
-      return text;
-    }
+    console.error("==================================");
+    console.error("API ERROR");
+    console.error("URL:", `${API_BASE_URL}${endpoint}`);
+    console.error("Status:", response.status);
+    console.error("Response:", errorText);
+    console.error("==================================");
+
+    throw new Error(errorText || `HTTP ${response.status}`);
   }
+
+  const text = await response.text();
+
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
 
   // =========================================================
   // AUTHENTICATION
@@ -111,19 +113,23 @@ class ApiService {
    * Used in:
    * LoginForm.jsx
    */
-  async login(data) {
-    const res = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+async login(data) {
+  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-    if (!res.ok) throw new Error("Login failed");
-
-    return res.text();
+  if (!res.ok) {
+    const error = await res.text();
+    console.error("Login Error:", error);
+    throw new Error(error || "Login failed");
   }
+
+  return res.text();
+}
 
   // =========================================================
   // PROFILE
